@@ -14,8 +14,6 @@ project(${PROJECT} C CXX ASM)
 
 pico_sdk_init()
 
-
-
 add_executable(${PROJECT}
 	st25tb_kameleon_piko.c
 )
