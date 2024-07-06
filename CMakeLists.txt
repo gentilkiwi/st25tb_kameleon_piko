@@ -16,6 +16,24 @@ pico_sdk_init()
 
 add_executable(${PROJECT}
 	st25tb_kameleon_piko.c
+    
+    kameleon/board.c
+    kameleon/leds.c
+    kameleon/buttons.c
+    kameleon/slots.c
+    kameleon/trf7970a.c
+    
+    kameleon/st25tb/st25tb.c
+    kameleon/st25tb/st25tb_target.c
+    #kameleon/st25tb/st25tb_initiator.c
+    
+    
+    kameleon/modes/emulate.c
+    kameleon/modes/rewrite.c
+    kameleon/modes/detect.c
+    kameleon/modes/select.c
+    kameleon/modes/learn.c
+    kameleon/modes/unk.c
 )
 
 pico_set_program_name(${PROJECT} ${PROJECT})
