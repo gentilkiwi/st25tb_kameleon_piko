@@ -9,22 +9,17 @@
 #include <stdbool.h>
 #include <string.h>
 #include "pico/stdlib.h"
+#include "pico/unique_id.h"
 #include "hardware/spi.h"
 #include "hardware/pio.h"
-#include "../config.h"
+#include "hardware/flash.h"
+#include "hardware/sync.h"
+#include "hardware/clocks.h"
 #include "slots.h"
 #include "leds.h"
-#include "buttons.h"
 #include "trf7970a.h"
 
-typedef struct _GLOBAL_SETTINGS {
-    uint8_t CurrentSlot;
-} GLOBAL_SETTINGS, *PGLOBAL_SETTINGS;
-
-extern GLOBAL_SETTINGS Settings;
-
 extern volatile bool g_irq_TA0, g_irq_SW1, g_irq_SW2, g_irq_TRF;
-
 
 #define PIKO_SPI                    spi0
 
@@ -57,12 +52,10 @@ extern volatile bool g_irq_TA0, g_irq_SW1, g_irq_SW2, g_irq_TRF;
 
 void BOARD_init();
 
-#define TIMER_stop()                    TA0CTL &= ~(TAIE | MC)
-#define TIMER_delay_Milliseconds(n_ms)  sleep_ms(n_ms)
-#define TIMER_start_Milliseconds(n_ms)  TIMER_start_Milliseconds_internal(n_ms * 33)
-#define TIMER_delay_Microseconds(n_us)  sleep_us(n_us)
-
-void TIMER_start_Milliseconds_internal(uint16_t n_unit_ms); // max is UINT16_MAX ( 1985 ms * 33 = ~ UINT16_MAX )
+#define TIMER_stop(id)                      cancel_alarm(id)
+#define TIMER_delay_Milliseconds(n_ms)      sleep_ms(n_ms)
+#define TIMER_start_Milliseconds(id, n_ms)  do{g_irq_TA0 = false; id = add_alarm_in_ms(n_ms, alarm_callback, NULL, false);} while(0)
+#define TIMER_delay_Microseconds(n_us)      sleep_us(n_us)
 
 #define IRQ_SOURCE_NONE                 0x00
 #define IRQ_SOURCE_TRF7970A             0x01
@@ -77,3 +70,7 @@ uint8_t IRQ_Wait_for_SW1_or_SW2_or_TRF(uint8_t *pTRF7970A_irqStatus);
 uint8_t IRQ_Wait_for_SW1_or_TRF(uint8_t *pTRF7970A_irqStatus);
 uint8_t IRQ_Wait_for_SW1_or_SW2_or_Timeout(uint16_t timeout_ms);
 uint8_t IRQ_Wait_for_SW1_or_SW2_or_TRF_or_Timeout(uint8_t *pTRF7970A_irqStatus, uint16_t timeout_ms);
+
+#define __low_power_mode_0              tight_loop_contents
+#define __no_operation()                asm volatile("nop")
+extern int __flash_binary_start, __flash_binary_end;

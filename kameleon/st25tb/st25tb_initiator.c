@@ -64,7 +64,7 @@ uint8_t ST25TB_Initiator_Read_Card()
         BP_IrqSource = ST25TB_Initiator_CMD_Select(ui8ChipId);
         if(BP_IrqSource == IRQ_SOURCE_NONE)
         {
-            BP_IrqSource = ST25TB_Initiator_CMD_CONFIRMED_Get_Uid((uint8_t *) SLOTS_ST25TB_Current[SLOTS_ST25TB_INDEX_UID]);
+            BP_IrqSource = ST25TB_Initiator_CMD_CONFIRMED_Get_Uid((uint8_t *) (SLOTS_ST25TB_Current + SLOTS_ST25TB_INDEX_UID));
             if(BP_IrqSource == IRQ_SOURCE_NONE)
             {
                 nbSectors = ST25TB_Initiator_ValidateAndGetNBSectorsFromUID((uint8_t *) SLOTS_ST25TB_Current[SLOTS_ST25TB_INDEX_UID]);

@@ -1,1 +1,1 @@
-rm -rf build
+cmake --build build --parallel --target clean

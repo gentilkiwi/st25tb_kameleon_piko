@@ -7,19 +7,6 @@
 
 void TRF7970A_init()
 {
-    gpio_init(PIKO_GPIO_TRF_EN);
-    gpio_set_dir(PIKO_GPIO_TRF_EN, GPIO_OUT);
-    gpio_init(PIKO_GPIO_SPI_CS);
-    gpio_set_dir(PIKO_GPIO_SPI_CS, GPIO_OUT);
-    gpio_init(PIKO_GPIO_TRF_IRQ);
-    TRF_IRQ_DISABLE();
-    
-    spi_init(PIKO_SPI, 4000000);
-	spi_set_format(PIKO_SPI, 8, SPI_CPOL_0, SPI_CPHA_1, SPI_MSB_FIRST);
-	gpio_set_function(PIKO_GPIO_SPI_CLK, GPIO_FUNC_SPI);
-	gpio_set_function(PIKO_GPIO_SPI_MOSI, GPIO_FUNC_SPI);
-	gpio_set_function(PIKO_GPIO_SPI_MISO, GPIO_FUNC_SPI);
-    
     TRF_CS_DISABLE();
     TRF_DISABLE();
     TIMER_delay_Milliseconds(10);
@@ -43,14 +30,14 @@ void TRF7970A_SPI_Send_raw(const uint8_t *pcbData, uint8_t cbData)
     TRF_CS_DISABLE();
 }
 
-void TRF7970A_SPI_DirectCommand_internal(uint8_t CommandCode_Preparred) // be careful, optimization make multiple direct commands too fast, a cycle between can help...
+void __time_critical_func(TRF7970A_SPI_DirectCommand_internal)(uint8_t CommandCode_Preparred) // be careful, optimization make multiple direct commands too fast, a cycle between can help...
 {
     TRF_CS_ENABLE();
     spi_write_blocking(PIKO_SPI, &CommandCode_Preparred, 1);
     TRF_CS_DISABLE();
 }
 
-uint8_t TRF7970A_SPI_Read_SingleRegister_internal(uint8_t Register_Prepared)
+uint8_t __time_critical_func(TRF7970A_SPI_Read_SingleRegister_internal)(uint8_t Register_Prepared)
 {
     uint8_t buffer[2] = {Register_Prepared, };
 
@@ -61,7 +48,7 @@ uint8_t TRF7970A_SPI_Read_SingleRegister_internal(uint8_t Register_Prepared)
     return buffer[1];
 }
 
-void TRF7970A_SPI_Write_SingleRegister_internal(uint8_t Register_Prepared, const uint8_t Value)
+void __time_critical_func(TRF7970A_SPI_Write_SingleRegister_internal)(uint8_t Register_Prepared, const uint8_t Value)
 {
     uint8_t buffer[2] = {Register_Prepared, Value};
     
@@ -70,7 +57,7 @@ void TRF7970A_SPI_Write_SingleRegister_internal(uint8_t Register_Prepared, const
     TRF_CS_DISABLE();
 }
 
-void TRF7970A_SPI_Read_ContinuousRegister_internal(uint8_t Register_Prepared, uint8_t *pbData, uint8_t cbData)
+void __time_critical_func(TRF7970A_SPI_Read_ContinuousRegister_internal)(uint8_t Register_Prepared, uint8_t *pbData, uint8_t cbData)
 {
     TRF_CS_ENABLE();
     spi_write_blocking(PIKO_SPI, &Register_Prepared, 1);
@@ -78,7 +65,7 @@ void TRF7970A_SPI_Read_ContinuousRegister_internal(uint8_t Register_Prepared, ui
     TRF_CS_DISABLE();
 }
 
-void TRF7970A_SPI_Write_Packet_TYPED(const uint8_t *pcbData, uint8_t cbData, const uint8_t type)
+void __time_critical_func(TRF7970A_SPI_Write_Packet_TYPED)(const uint8_t *pcbData, uint8_t cbData, const uint8_t type)
 {
     uint16_t ui16TotalLength = cbData;
     uint8_t buffer[5] = {
@@ -98,16 +85,16 @@ void TRF7970A_SPI_Write_Packet_TYPED(const uint8_t *pcbData, uint8_t cbData, con
 void TRF7970A_SPI_Ignore_Command()
 {
     TRF7970A_SPI_DirectCommand(TRF79X0_STOP_DECODERS_CMD);
-    //__no_operation();
+    __no_operation();
     TRF7970A_SPI_DirectCommand(TRF79X0_RUN_DECODERS_CMD);
 }
 
-uint8_t TRF7970A_SPI_waitIrq()
+uint8_t __time_critical_func(TRF7970A_SPI_waitIrq)()
 {
     g_irq_TRF = TRF_IRQ_READ();
     while(!g_irq_TRF)
     {
-        //__low_power_mode_0();
+        __low_power_mode_0();
     }
     g_irq_TRF = false;
 

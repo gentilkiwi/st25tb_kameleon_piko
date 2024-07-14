@@ -13,16 +13,8 @@
 #define TRF_CS_DISABLE()    gpio_put(PIKO_GPIO_SPI_CS, true)
 
 #define TRF_IRQ_READ()      gpio_get(PIKO_GPIO_TRF_IRQ)
-#define TRF_IRQ_ENABLE()    do{/*TRF_IRQ_IFG &= ~TRF_IRQ_BIT; */g_irq_TRF = TRF_IRQ_READ(); gpio_set_irq_enabled(PIKO_GPIO_TRF_IRQ, GPIO_IRQ_EDGE_RISE, true);} while(0)
+#define TRF_IRQ_ENABLE()    do{g_irq_TRF = TRF_IRQ_READ(); gpio_set_irq_enabled(PIKO_GPIO_TRF_IRQ, GPIO_IRQ_EDGE_RISE, true);} while(0)
 #define TRF_IRQ_DISABLE()   gpio_set_irq_enabled(PIKO_GPIO_TRF_IRQ, GPIO_IRQ_EDGE_RISE, false)
-//#define TRF_IRQ_CLEAR()     TRF_IRQ_IFG &= ~TRF_IRQ_BIT
-
-//#define TRF_SPI_WAIT_BUSY() while(UCB1STATW & UCBUSY__BUSY)
-//#define TRF_SPI_WAIT_TX()   while(!(UCB1IFG & UCTXIFG))
-//#define TRF_SPI_WAIT_RX()   while(!(UCB1IFG & UCRXIFG))
-
-//#define TRF_SPI_SEND(s)     do{UCB1TXBUF = s; TRF_SPI_WAIT_TX(); } while(0) // Usually, WAIT_TX before sending, but 1/ we're sure 1st one will be ok, 2/ more efficient for direct reading after
-//#define TRF_SPI_RECV(r)     do{UCB1TXBUF = 0x00; TRF_SPI_WAIT_BUSY(); r = UCB1RXBUF;} while(0)   // More efficient than playing with RX/TX or IRQ...
 
 void TRF7970A_init();
 void TRF7970A_SPI_Send_raw(const uint8_t *pcbData, uint8_t cbData);

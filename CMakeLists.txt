@@ -1,4 +1,5 @@
 set(PROJECT st25tb_kameleon_piko)
+
 cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_C_STANDARD 11)
@@ -19,14 +20,12 @@ add_executable(${PROJECT}
     
     kameleon/board.c
     kameleon/leds.c
-    kameleon/buttons.c
     kameleon/slots.c
     kameleon/trf7970a.c
     
     kameleon/st25tb/st25tb.c
     kameleon/st25tb/st25tb_target.c
-    #kameleon/st25tb/st25tb_initiator.c
-    
+    kameleon/st25tb/st25tb_initiator.c
     
     kameleon/modes/emulate.c
     kameleon/modes/rewrite.c
@@ -44,13 +43,16 @@ pico_set_program_url(${PROJECT} "https://github.com/gentilkiwi/st25tb_kameleon_p
 pico_enable_stdio_uart(${PROJECT} 0)
 pico_enable_stdio_usb(${PROJECT} 1)
 
+pico_set_linker_script(${PROJECT} ${CMAKE_SOURCE_DIR}/memmap_2M_reserved.ld)
+
 target_compile_options(${PROJECT} PRIVATE -Werror -Wall -Wextra)
 target_link_libraries(${PROJECT}
 	pico_stdlib
+    pico_unique_id
 	hardware_spi
 	hardware_pio
+    hardware_flash
 )
 
-# pico_add_extra_outputs(${PROJECT})
 pico_add_hex_output(${PROJECT})
 pico_add_uf2_output(${PROJECT})

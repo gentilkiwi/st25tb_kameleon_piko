@@ -15,7 +15,7 @@ void ST25TB_Target_ResetState()
     g_eCurrentTargetState = PowerOff;
 }
 
-uint8_t ST25TB_Target_AdjustIdxForSpecialAddr(uint8_t original)
+uint8_t __time_critical_func(ST25TB_Target_AdjustIdxForSpecialAddr)(uint8_t original)
 {
     if(original == 0xff)
     {
@@ -25,7 +25,7 @@ uint8_t ST25TB_Target_AdjustIdxForSpecialAddr(uint8_t original)
     return original;
 }
 
-tSt25TbState ST25TB_Target_StateMachine()
+tSt25TbState __time_critical_func(ST25TB_Target_StateMachine)()
 {
     uint8_t cbData = 0, idx, delay;
     const uint8_t *pcbData = 0;

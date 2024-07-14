@@ -18,9 +18,9 @@
  *
  *  -> focus on t0 <= 160 µs ?
  */
-#define ST25TB_TARGET_DELAY_US_GLOBAL  96
-#define ST25TB_TARGET_DELAY_US_MEDIUM  11
-#define ST25TB_TARGET_DELAY_US_SMALL   3
+#define ST25TB_TARGET_DELAY_US_GLOBAL  86
+#define ST25TB_TARGET_DELAY_US_MEDIUM  13
+#define ST25TB_TARGET_DELAY_US_SMALL   7
 
 typedef enum __attribute__((__packed__)) _tSt25TbState {
     Invalid,

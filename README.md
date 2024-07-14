@@ -8,6 +8,10 @@ SKIP_OPENOCD=1 SKIP_VSCODE=1 SKIP_UART=1 ./pico_setup.sh
 ```
 
 
+```
+..\openocd -f interface\cmsis-dap.cfg -f target\rp2040.cfg -c "adapter speed 5000" -c "program c:\\security\\pico\\st25tb_kameleon_piko\\build\\st25tb_kameleon_piko.elf verify reset exit"
+```
+
 ## References
 
 ### Raspberry Pi

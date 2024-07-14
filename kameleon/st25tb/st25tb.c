@@ -8,7 +8,7 @@
 uint8_t g_ui8_ST25TB_Buffer[0x10];
 uint8_t g_ui8_cbST25TB_Buffer = 0;
 
-bool ST25TB_Recv(bool bIsinitiator, uint8_t irqProvided)
+bool __time_critical_func(ST25TB_Recv)(bool bIsinitiator, uint8_t irqProvided)
 {
     bool status = false;
     if (irqProvided & TRF79X0_IRQ_STATUS_SRX)
@@ -27,7 +27,7 @@ bool ST25TB_Recv(bool bIsinitiator, uint8_t irqProvided)
     return status;
 }
 
-bool ST25TB_Send(const uint8_t *pcbData, const uint8_t cbData)
+bool __time_critical_func(ST25TB_Send)(const uint8_t *pcbData, const uint8_t cbData)
 {
     bool status;
 
@@ -74,7 +74,7 @@ void ST25TB_TRF7970A_Mode(bool bIsInitiator)
     TRF_IRQ_DISABLE();
 
     TRF7970A_SPI_DirectCommand(TRF79X0_SOFT_INIT_CMD);
-    //__no_operation();
+    __no_operation();
     TRF7970A_SPI_DirectCommand(TRF79X0_IDLE_CMD);
     TIMER_delay_Milliseconds(2);
 

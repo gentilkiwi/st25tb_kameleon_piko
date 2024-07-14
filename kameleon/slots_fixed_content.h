@@ -1,3 +1,8 @@
+/*  Benjamin DELPY `gentilkiwi`
+    https://blog.gentilkiwi.com
+    benjamin@gentilkiwi.com
+    Licence : https://creativecommons.org/licenses/by/4.0/
+*/
         { 0x00, 0x00, 0x00, 0x00 }, // 0x00
         { 0x00, 0x00, 0x00, 0x00 }, // 0x01
         { 0x00, 0x00, 0x00, 0x00 }, // 0x02
