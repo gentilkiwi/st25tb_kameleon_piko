@@ -50,10 +50,10 @@ void BOARD_init()
     TRF_IRQ_DISABLE();
     
     spi_init(PIKO_SPI, 4000000);
-	spi_set_format(PIKO_SPI, 8, SPI_CPOL_0, SPI_CPHA_1, SPI_MSB_FIRST);
-	gpio_set_function(PIKO_GPIO_SPI_CLK, GPIO_FUNC_SPI);
-	gpio_set_function(PIKO_GPIO_SPI_MOSI, GPIO_FUNC_SPI);
-	gpio_set_function(PIKO_GPIO_SPI_MISO, GPIO_FUNC_SPI);
+    spi_set_format(PIKO_SPI, 8, SPI_CPOL_0, SPI_CPHA_1, SPI_MSB_FIRST);
+    gpio_set_function(PIKO_GPIO_SPI_CLK, GPIO_FUNC_SPI);
+    gpio_set_function(PIKO_GPIO_SPI_MOSI, GPIO_FUNC_SPI);
+    gpio_set_function(PIKO_GPIO_SPI_MISO, GPIO_FUNC_SPI);
 
     TRF7970A_init();
 

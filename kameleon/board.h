@@ -72,5 +72,5 @@ uint8_t IRQ_Wait_for_SW1_or_SW2_or_Timeout(uint16_t timeout_ms);
 uint8_t IRQ_Wait_for_SW1_or_SW2_or_TRF_or_Timeout(uint8_t *pTRF7970A_irqStatus, uint16_t timeout_ms);
 
 #define __low_power_mode_0              tight_loop_contents
-#define __no_operation()                asm volatile("nop")
+#define __no_operation()                asm volatile("nop \n nop")
 extern int __flash_binary_start, __flash_binary_end;

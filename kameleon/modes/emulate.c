@@ -14,8 +14,9 @@ void __time_critical_func(MODE_emulate)()
     {
         ST25TB_Target_ResetState();
         ST25TB_TRF7970A_Mode(false);
-        
+
         TRF7970A_SPI_DirectCommand(TRF79X0_RUN_DECODERS_CMD);
+        
         do
         {
             bContinueStateMachine = false;

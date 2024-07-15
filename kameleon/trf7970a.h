@@ -27,7 +27,6 @@ void TRF7970A_SPI_Read_ContinuousRegister_internal(uint8_t Register_Prepared, ui
 #define TRF7970A_SPI_Write_Packet_NOCRC(pcbData, cbData)  TRF7970A_SPI_Write_Packet_TYPED(pcbData, cbData, MK_DC(TRF79X0_TRANSMIT_NO_CRC_CMD))
 void TRF7970A_SPI_Write_Packet_TYPED(const uint8_t *pcbData, uint8_t cbData, const uint8_t type);
 
-void TRF7970A_SPI_Ignore_Command();
 uint8_t TRF7970A_SPI_waitIrq();
 
 #define MK_DC(x) ((x & TRF79X0_ADDRESS_MASK) | TRF79X0_CONTROL_CMD)
