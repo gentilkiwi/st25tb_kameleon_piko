@@ -74,7 +74,7 @@ void __time_critical_func(TRF7970A_SPI_Write_Packet_TYPED)(const uint8_t *pcbDat
         MK_WC(TRF79X0_TX_LENGTH_BYTE1_REG),
         (uint8_t) ((ui16TotalLength & 0x0ff0) >> 4),    // in TRF79X0_TX_LENGTH_BYTE1_REG
         (ui16TotalLength & 0x0f) << 4,                  // in TRF79X0_TX_LENGTH_BYTE2_REG
-        };
+    };
         
     TRF_CS_ENABLE();
     spi_write_blocking(PIKO_SPI, buffer, sizeof(buffer));
