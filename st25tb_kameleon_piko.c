@@ -38,7 +38,7 @@ int main()
     LEDS_Animation();
     SLOTS_Change(FlashStoredData.CurrentSlot);
 
-    while(!gpio_get(PIKO_GPIO_SW2_IRQ))
+    while(!gpio_get(PIKO_GPIO_SW2_IRQ)) // to wait terminal to be connected - if needed
     {
         __low_power_mode_0();
     }

@@ -54,5 +54,12 @@ target_link_libraries(${PROJECT}
     hardware_flash
 )
 
+foreach(i RANGE 0 7)
+    if(EXISTS ${CMAKE_SOURCE_DIR}/kameleon/private_slots/slot${i}.h)
+        message(STATUS "[ST25TB] Private slot ${i} content found")
+        add_compile_definitions(${PROJECT} SLOT_${i}_CONTENT="private_slots/slot${i}.h")
+    endif()
+endforeach()
+
 pico_add_hex_output(${PROJECT})
 pico_add_uf2_output(${PROJECT})

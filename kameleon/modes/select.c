@@ -20,7 +20,7 @@ void MODE_select()
                 index = 0;
             }
             SLOTS_Change(index);
-            
+
             TIMER_delay_Milliseconds(150);
         }
     }

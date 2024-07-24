@@ -9,12 +9,20 @@
 #define TRF_ENABLE()        gpio_put(PIKO_GPIO_TRF_EN, true)
 #define TRF_DISABLE()       gpio_put(PIKO_GPIO_TRF_EN, false)
 
-#define TRF_CS_ENABLE()     gpio_put(PIKO_GPIO_SPI_CS, false)
-#define TRF_CS_DISABLE()    gpio_put(PIKO_GPIO_SPI_CS, true)
+#define TRF_CS_ENABLE()     __no_operation(); gpio_put(PIKO_GPIO_SPI_CS, false)
+#define TRF_CS_DISABLE()    gpio_put(PIKO_GPIO_SPI_CS, true); __no_operation()
 
 #define TRF_IRQ_READ()      gpio_get(PIKO_GPIO_TRF_IRQ)
 #define TRF_IRQ_ENABLE()    do{g_irq_TRF = TRF_IRQ_READ(); gpio_set_irq_enabled(PIKO_GPIO_TRF_IRQ, GPIO_IRQ_EDGE_RISE, true);} while(0)
 #define TRF_IRQ_DISABLE()   gpio_set_irq_enabled(PIKO_GPIO_TRF_IRQ, GPIO_IRQ_EDGE_RISE, false)
+
+
+
+
+
+
+
+
 
 void TRF7970A_init();
 void TRF7970A_SPI_Send_raw(const uint8_t *pcbData, uint8_t cbData);

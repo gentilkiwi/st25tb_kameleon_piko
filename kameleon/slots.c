@@ -12,8 +12,12 @@ void SLOTS_Change(uint8_t index)
     {
         flash_update_CurrentSlot(index);
     }
+#if SLOTS_ST25TB_COUNT > 8
+    LEDS_SLOTS_Bitmask(index);
+#else
     LED_Slot(index);
-}
+#endif
+ }
 
 void SLOTS_Load(uint8_t index)
 {
@@ -80,57 +84,89 @@ __attribute__ ((aligned (FLASH_SECTOR_SIZE), section(".flash_storage")))
     
     .Slots = {
         {   /* Slot 0 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x00
+            #if defined(SLOT_0_CONTENT)
+            #include SLOT_0_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x00, 0x00, 0x00 }, // SLOTS_ST25TB_INDEX_UID // Test with libnfc and ACR122U did not like 0x00 at the end (?)
-            { 0x00, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #if SLOTS_ST25TB_COUNT > 1
         {   /* Slot 1 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x11
+            #if defined(SLOT_1_CONTENT)
+            #include SLOT_1_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x11, 0x11, 0x11 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x11, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     #if SLOTS_ST25TB_COUNT > 2
         {   /* Slot 2 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x22
+            #if defined(SLOT_2_CONTENT)
+            #include SLOT_2_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x22, 0x22, 0x22 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x22, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     #if SLOTS_ST25TB_COUNT > 3
         {   /* Slot 3 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x33
+            #if defined(SLOT_3_CONTENT)
+            #include SLOT_3_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x33, 0x33, 0x33 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x33, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     #if SLOTS_ST25TB_COUNT > 4
         {   /* Slot 4 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x44
+            #if defined(SLOT_4_CONTENT)
+            #include SLOT_4_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x44, 0x44, 0x44 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x44, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     #if SLOTS_ST25TB_COUNT > 5
         {   /* Slot 5 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x55
+            #if defined(SLOT_5_CONTENT)
+            #include SLOT_5_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x55, 0x55, 0x55 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x55, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     #if SLOTS_ST25TB_COUNT > 6
         {   /* Slot 6 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x66
+            #if defined(SLOT_6_CONTENT)
+            #include SLOT_6_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x66, 0x66, 0x66 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x66, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     #if SLOTS_ST25TB_COUNT > 7
         {   /* Slot 7 */
+            #undef SLOT_UID_BYTE
+            #define SLOT_UID_BYTE   0x77
+            #if defined(SLOT_7_CONTENT)
+            #include SLOT_7_CONTENT
+            #else
             #include "slots_fixed_content.h"
-            { 0xff, 0x77, 0x77, 0x77 }, // SLOTS_ST25TB_INDEX_UID
-            { 0x77, 0x33, 0x02, 0xd0 }, // SLOTS_ST25TB_INDEX_UID_2
+            #endif
         },
     #endif
     }

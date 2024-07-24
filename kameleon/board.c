@@ -31,6 +31,9 @@ int64_t alarm_callback(__attribute__((unused)) alarm_id_t id, __attribute__((unu
 
 void BOARD_init()
 {
+     /*
+     * MCU @ 48 MHz, because it's enough
+     */
     set_sys_clock_48mhz();
     
     LEDS_Init();
@@ -82,7 +85,6 @@ uint8_t IRQ_Wait_for_SW1_or_SW2()
 
     g_irq_SW1 = false;
     g_irq_SW2 = false;
-
     while(!g_irq_SW1 && !g_irq_SW2)
     {
        __low_power_mode_0();
@@ -109,7 +111,6 @@ uint8_t __time_critical_func(IRQ_Wait_for_SW1_or_SW2_or_TRF)(uint8_t *pTRF7970A_
 
     g_irq_SW1 = false;
     g_irq_SW2 = false;
-
     g_irq_TRF = TRF_IRQ_READ();
     while(!g_irq_TRF && !g_irq_SW1 && !g_irq_SW2)
     {
@@ -143,7 +144,6 @@ uint8_t IRQ_Wait_for_SW1_or_TRF(uint8_t *pTRF7970A_irqStatus)
     uint8_t ret = IRQ_SOURCE_NONE;
 
     g_irq_SW1 = false;
-
     g_irq_TRF = TRF_IRQ_READ();
     while(!g_irq_TRF && !g_irq_SW1)
     {
@@ -173,7 +173,6 @@ uint8_t IRQ_Wait_for_SW1_or_SW2_or_Timeout(uint16_t timeout_ms)
 
     g_irq_SW1 = false;
     g_irq_SW2 = false;
-
     TIMER_start_Milliseconds(id, timeout_ms);
     while(!g_irq_TA0 && !g_irq_SW1 && !g_irq_SW2)
     {
@@ -208,7 +207,6 @@ uint8_t IRQ_Wait_for_SW1_or_SW2_or_TRF_or_Timeout(uint8_t *pTRF7970A_irqStatus, 
     
     g_irq_SW1 = false;
     g_irq_SW2 = false;
-
     TIMER_start_Milliseconds(id, timeout_ms);
     g_irq_TRF = TRF_IRQ_READ();
     while(!g_irq_TRF && !g_irq_TA0 && !g_irq_SW1 && !g_irq_SW2)

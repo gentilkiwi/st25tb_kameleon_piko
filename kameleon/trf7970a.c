@@ -7,13 +7,16 @@
 
 void TRF7970A_init()
 {
-    TRF_CS_DISABLE();
+    TRF_CS_DISABLE(); // just in case
+    
     TRF_DISABLE();
     TIMER_delay_Milliseconds(10);
     TRF_ENABLE();
     TIMER_delay_Milliseconds(10);
     // 6.11 TRF7970A Initialization
     TRF7970A_SPI_DirectCommand(TRF79X0_SOFT_INIT_CMD);
+    __no_operation();
+    __no_operation();
     TRF7970A_SPI_DirectCommand(TRF79X0_IDLE_CMD);
     TIMER_delay_Milliseconds(1);
     TRF7970A_SPI_DirectCommand(TRF79X0_RESET_FIFO_CMD);
@@ -26,7 +29,11 @@ void TRF7970A_init()
 void TRF7970A_SPI_Send_raw(const uint8_t *pcbData, uint8_t cbData)
 {
     TRF_CS_ENABLE();
+    
+    
     spi_write_blocking(PIKO_SPI, pcbData, cbData);
+    
+    
     TRF_CS_DISABLE();
 }
 
@@ -43,6 +50,7 @@ uint8_t __time_critical_func(TRF7970A_SPI_Read_SingleRegister_internal)(uint8_t 
 
     TRF_CS_ENABLE();
     spi_write_read_blocking(PIKO_SPI, buffer, buffer, sizeof(buffer));
+
     TRF_CS_DISABLE();
 
     return buffer[1];
@@ -60,8 +68,12 @@ void __time_critical_func(TRF7970A_SPI_Write_SingleRegister_internal)(uint8_t Re
 void __time_critical_func(TRF7970A_SPI_Read_ContinuousRegister_internal)(uint8_t Register_Prepared, uint8_t *pbData, uint8_t cbData)
 {
     TRF_CS_ENABLE();
+
     spi_write_blocking(PIKO_SPI, &Register_Prepared, 1);
+
     spi_read_blocking(PIKO_SPI, 0x00, pbData, cbData);
+
+
     TRF_CS_DISABLE();
 }
 
@@ -76,9 +88,14 @@ void __time_critical_func(TRF7970A_SPI_Write_Packet_TYPED)(const uint8_t *pcbDat
         (ui16TotalLength & 0x0f) << 4,                  // in TRF79X0_TX_LENGTH_BYTE2_REG
     };
         
+
+
     TRF_CS_ENABLE();
+
     spi_write_blocking(PIKO_SPI, buffer, sizeof(buffer));
+
     spi_write_blocking(PIKO_SPI, pcbData, cbData);
+
     TRF_CS_DISABLE();
 }
 

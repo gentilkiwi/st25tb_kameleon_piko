@@ -6,6 +6,14 @@
 #pragma once
 #include "board.h"
 
+typedef void (* PMODE_FUNCTION) ();
+typedef struct _KAMELEON_MODE {
+    const PMODE_FUNCTION function;
+    const uint8_t ledsModesBitmask;
+    const char* Name;
+    const char* Description;
+} KAMELEON_MODE, *PKAMELEON_MODE;
+
 #include "st25tb/st25tb.h"
 
 #include "modes/emulate.h"
@@ -14,11 +22,3 @@
 #include "modes/select.h"
 #include "modes/learn.h"
 #include "modes/unk.h"
-
-typedef void (* PMODE_FUNCTION) ();
-typedef struct _KAMELEON_MODE {
-    const PMODE_FUNCTION function;
-    const uint8_t ledsModesBitmask;
-    const char* Name;
-    const char* Description;
-} KAMELEON_MODE, *PKAMELEON_MODE;

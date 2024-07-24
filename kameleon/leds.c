@@ -52,7 +52,7 @@ void LEDS_Animation()
 {
     uint8_t i;
 
-    for(i = 0; i < (sizeof(LEDS) / sizeof(LEDS[0])); i++)
+    for(i = 0; i < count_of(LEDS); i++)
     {
         LED_ON(i);
         TIMER_delay_Milliseconds(10);

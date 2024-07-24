@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 #include "pico/stdlib.h"
 #include "pico/unique_id.h"
 #include "hardware/spi.h"
@@ -15,6 +16,7 @@
 #include "hardware/flash.h"
 #include "hardware/sync.h"
 #include "hardware/clocks.h"
+
 #include "slots.h"
 #include "leds.h"
 #include "trf7970a.h"
@@ -51,6 +53,8 @@ extern volatile bool g_irq_TA0, g_irq_SW1, g_irq_SW2, g_irq_TRF;
 #define PIKO_GPIO_LED_SLOT7         25
 
 void BOARD_init();
+
+#define RAND_Generate() rand()
 
 #define TIMER_stop(id)                      cancel_alarm(id)
 #define TIMER_delay_Milliseconds(n_ms)      sleep_ms(n_ms)

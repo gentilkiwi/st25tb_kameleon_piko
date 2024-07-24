@@ -6,11 +6,12 @@
 #pragma once
 #include "board.h"
 
-extern const uint LEDS[];
+/*
+ * No _LED structure needed here as we work
+ * with GPIO number
+ */
 
-void LEDS_Init();
-void LEDS_Bitmask(const uint *LEDS_ARRAY, const uint8_t nbLeds, uint8_t bitmask);
-void LEDS_Animation();
+extern const uint LEDS[];
 
 #define LEDS_MODES      LEDS
 #define NB_LEDS_MODES   5
@@ -18,6 +19,10 @@ void LEDS_Animation();
 #define NB_LEDS_SLOTS   8
 #define LEDS_STATUS     LEDS_SLOTS + NB_LEDS_SLOTS
 #define NB_LEDS_STATUS  3
+
+void LEDS_Init();
+void LEDS_Bitmask(const uint *LEDS_ARRAY, const uint8_t nbLeds, uint8_t bitmask);
+void LEDS_Animation();
 
 #define LEDS_MODES_Bitmask(bitmask) LEDS_Bitmask(LEDS_MODES, NB_LEDS_MODES, bitmask)
 #define LEDS_SLOTS_Bitmask(bitmask) LEDS_Bitmask(LEDS_SLOTS, NB_LEDS_SLOTS, bitmask)

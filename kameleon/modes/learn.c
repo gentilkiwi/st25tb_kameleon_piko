@@ -52,6 +52,6 @@ void MODE_learn()
 
     if(bNeedToReload)
     {
-        SLOTS_Load(FlashStoredData.CurrentSlot);
+        SLOTS_Load_Current();
     }
 }

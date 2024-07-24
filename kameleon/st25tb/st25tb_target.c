@@ -145,6 +145,7 @@ tSt25TbState __time_critical_func(ST25TB_Target_StateMachine)()
     {
         TRF7970A_SPI_DirectCommand(TRF79X0_STOP_DECODERS_CMD);
         __no_operation();
+        __no_operation();
         TRF7970A_SPI_DirectCommand(TRF79X0_RUN_DECODERS_CMD);
     }
 
