@@ -18,6 +18,7 @@
 #include "hardware/clocks.h"
 
 #include "slots.h"
+#include "references.h"
 #include "leds.h"
 #include "trf7970a.h"
 

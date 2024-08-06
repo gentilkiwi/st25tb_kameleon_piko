@@ -1,2 +1,3 @@
 build/
 kameleon/private_*
+kameleon/*.data

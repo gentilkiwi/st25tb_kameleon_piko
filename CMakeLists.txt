@@ -21,6 +21,7 @@ add_executable(${PROJECT}
     kameleon/board.c
     kameleon/leds.c
     kameleon/slots.c
+    kameleon/references.c
     kameleon/trf7970a.c
     
     kameleon/st25tb/st25tb.c
@@ -35,6 +36,15 @@ add_executable(${PROJECT}
     kameleon/modes/unk.c
 )
 
+target_compile_options(${PROJECT} PRIVATE -Werror -Wall -Wextra)
+target_link_libraries(${PROJECT}
+    pico_stdlib
+    pico_unique_id
+    hardware_spi
+    hardware_pio
+    hardware_flash
+)
+
 pico_set_program_name(${PROJECT} ${PROJECT})
 pico_set_program_description(${PROJECT} "st25tb_kameleon on Raspberry Pi Pico")
 pico_set_program_version(${PROJECT} "0.1")
@@ -45,21 +55,31 @@ pico_enable_stdio_usb(${PROJECT} 1)
 
 pico_set_linker_script(${PROJECT} ${CMAKE_SOURCE_DIR}/memmap_2M_reserved.ld)
 
-target_compile_options(${PROJECT} PRIVATE -Werror -Wall -Wextra)
-target_link_libraries(${PROJECT}
-    pico_stdlib
-    pico_unique_id
-    hardware_spi
-    hardware_pio
-    hardware_flash
-)
+pico_add_hex_output(${PROJECT})
+pico_add_uf2_output(${PROJECT})
+
+
+set(PRIVATE_DATA kameleon/private_data)
+set(REFERENCES_DATA kameleon/references.data)
 
 foreach(i RANGE 0 7)
-    if(EXISTS ${CMAKE_SOURCE_DIR}/kameleon/private_slots/slot${i}.h)
+    if(EXISTS ${PRIVATE_DATA}/slot${i}.cnt)
         message(STATUS "[ST25TB] Private slot ${i} content found")
-        add_compile_definitions(${PROJECT} SLOT_${i}_CONTENT="private_slots/slot${i}.h")
+        add_compile_definitions(${PROJECT} SLOT_${i}_CONTENT="private_data/slot${i}.cnt")
     endif()
 endforeach()
 
-pico_add_hex_output(${PROJECT})
-pico_add_uf2_output(${PROJECT})
+file(GLOB files ${PRIVATE_DATA}/*.ref)
+if(files)
+    file(WRITE ${REFERENCES_DATA})
+    foreach(file ${files})
+        get_filename_component(fileshort ${file} NAME)
+        message(STATUS "[ST25TB] Reference file \'${fileshort}\' found")
+        file(APPEND ${REFERENCES_DATA} "#include \"private_data/${fileshort}\"\n")
+    endforeach()
+    add_compile_definitions(${PROJECT} REFERENCES_DATA_READY)
+else()
+    if(EXISTS ${REFERENCES_DATA})
+        file(REMOVE ${REFERENCES_DATA})
+    endif()
+endif()
