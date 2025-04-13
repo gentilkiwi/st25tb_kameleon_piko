@@ -16,6 +16,7 @@ const KAMELEON_MODE Modes[] = {
 
 const KAMELEON_MODE Modes_2[] = {
     {.function = MODE_learn,   .ledsModesBitmask = 1 << 3, .Name = "Learn", "~"},
+    {.function = MODE_tear,    .ledsModesBitmask = 1 << 4, .Name = "Tear!", "~"},
 };
 
 const char KIWI_BANNER[] = 	"\x1b[2J\x1b[3J\x1b[H\n"

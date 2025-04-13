@@ -22,3 +22,4 @@ typedef struct _KAMELEON_MODE {
 #include "modes/select.h"
 #include "modes/learn.h"
 #include "modes/unk.h"
+#include "modes/tear.h"

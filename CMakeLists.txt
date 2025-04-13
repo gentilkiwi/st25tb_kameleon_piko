@@ -10,7 +10,9 @@ set(PICO_BOARD pico)
 set(PICO_COMPILER pico_arm_gcc)
 
 include(pico_sdk_import.cmake)
-include(pico_extras_import.cmake)
+if(${PICO_SDK_VERSION_MAJOR} LESS 2)
+	include(pico_extras_import.cmake)
+endif()
 project(${PROJECT} C CXX ASM)
 
 pico_sdk_init()
@@ -34,6 +36,7 @@ add_executable(${PROJECT}
     kameleon/modes/select.c
     kameleon/modes/learn.c
     kameleon/modes/unk.c
+    kameleon/modes/tear.c
 )
 
 target_compile_options(${PROJECT} PRIVATE -Werror -Wall -Wextra)
@@ -57,7 +60,6 @@ pico_set_linker_script(${PROJECT} ${CMAKE_SOURCE_DIR}/memmap_2M_reserved.ld)
 
 pico_add_hex_output(${PROJECT})
 pico_add_uf2_output(${PROJECT})
-
 
 set(PRIVATE_DATA kameleon/private_data)
 set(REFERENCES_DATA kameleon/references.data)
