@@ -26,6 +26,7 @@ add_executable(${PROJECT}
     kameleon/st25tb/st25tb.c
     kameleon/st25tb/st25tb_target.c
     kameleon/st25tb/st25tb_initiator.c
+    kameleon/st25tb/st25tb_utils.c
     
     kameleon/modes/emulate.c
     kameleon/modes/rewrite.c

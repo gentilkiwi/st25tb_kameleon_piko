@@ -11,7 +11,6 @@ typedef struct _KAMELEON_MODE {
     const PMODE_FUNCTION function;
     const uint8_t ledsModesBitmask;
     const char* Name;
-    const char* Description;
 } KAMELEON_MODE, *PKAMELEON_MODE;
 
 #include "st25tb/st25tb.h"

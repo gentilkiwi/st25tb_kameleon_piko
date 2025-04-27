@@ -7,16 +7,16 @@
 #include "kameleon/modes.h"
 
 const KAMELEON_MODE Modes[] = {
-    {.function = MODE_emulate, .ledsModesBitmask = 1 << 0, .Name = "Emulate", "~"},
-    {.function = MODE_rewrite, .ledsModesBitmask = 1 << 1, .Name = "Rewrite", "~"},
-    {.function = MODE_detect,  .ledsModesBitmask = 1 << 2, .Name = "Detect", "~"},
-    {.function = MODE_select,  .ledsModesBitmask = 1 << 3, .Name = "Select", "~"},
-    {.function = MODE_unk,     .ledsModesBitmask = 1 << 4, .Name = "(⊙_⊙)？", "~"},
+    {.function = MODE_emulate, .ledsModesBitmask = 1 << 0, .Name = "Emulate"},
+    {.function = MODE_rewrite, .ledsModesBitmask = 1 << 1, .Name = "Rewrite"},
+    {.function = MODE_detect,  .ledsModesBitmask = 1 << 2, .Name = "Detect"},
+    {.function = MODE_select,  .ledsModesBitmask = 1 << 3, .Name = "Select"},
+    {.function = MODE_unk,     .ledsModesBitmask = 1 << 4, .Name = "(⊙_⊙)？"},
 };
 
 const KAMELEON_MODE Modes_2[] = {
-    {.function = MODE_learn,   .ledsModesBitmask = 1 << 3, .Name = "Learn", "~"},
-    {.function = MODE_tear,    .ledsModesBitmask = 1 << 4, .Name = "Tear!", "~"},
+    {.function = MODE_learn,   .ledsModesBitmask = 1 << 3, .Name = "Learn"},
+    {.function = MODE_tear,    .ledsModesBitmask = 1 << 4, .Name = "Tear!"},
 };
 
 const char KIWI_BANNER[] = 	"\x1b[2J\x1b[3J\x1b[H\n"
@@ -27,7 +27,7 @@ const char KIWI_BANNER[] = 	"\x1b[2J\x1b[3J\x1b[H\n"
 	" '## v #\\____/\n"
 	"  '#####' L\\_      ***/\n\n";
 
-int main()
+int main(void)
 {
     uint8_t maxModes;
     const KAMELEON_MODE *pMode, *cMode;
@@ -73,6 +73,25 @@ int main()
     }
 
     printf("ST25TB - Current Slot  : %u\n", FlashStoredData.CurrentSlot);
+    printf("ST25TB - Total slots   : %hhu\n", SLOTS_ST25TB_COUNT);
+    
+#if defined(SLOTS_ST25TB_SUPPORT_4K)
+    printf("ST25TB support for     : 4Kb\n");
+#elif defined(SLOTS_ST25TB_SUPPORT_2K)
+    printf("ST25TB support for     : 2Kb\n");
+#elif defined(SLOTS_ST25TB_SUPPORT_512)
+    printf("ST25TB support for     : 512b\n");
+#endif
+    
+#if defined(ST25TB_DO_NOT_WRITE_DANGEROUS_SECTORS)
+    printf("Flag: ST25TB_DO_NOT_WRITE_DANGEROUS_SECTORS is set\n");
+#endif
+#if defined(ST25TB_DO_NOT_WRITE_COUNTERS)
+    printf("Flag: ST25TB_DO_NOT_WRITE_COUNTERS is set\n");
+#endif
+#if defined(ST25TB_DO_NOT_WRITE_SYSTEM)
+    printf("Flag: ST25TB_DO_NOT_WRITE_SYSTEM is set\n");
+#endif
 
     while(true)
     {

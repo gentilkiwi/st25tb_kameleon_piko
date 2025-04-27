@@ -46,38 +46,6 @@ uint8_t SLOTS_FindByUID(uint8_t pui8Data[8]) // ret == SLOTS_FIND_INVALID_INDEX 
 
 uint8_t SLOTS_ST25TB_Current[SLOTS_ST25TB_SECTORS_INTERNAL][4];
 
-void flash_update_CurrentSlot(uint32_t NewSlot)
-{
-    uint32_t ints;
-    uint8_t Buffer[ROUND_UP(sizeof(FlashStoredData), FLASH_PAGE_SIZE)];
-    PFLASH_STORED_DATA p = (PFLASH_STORED_DATA) Buffer;
-    *p = FlashStoredData;
-
-    p->CurrentSlot = NewSlot;
-    printf("|%s| - [%lu]\n", __FUNCTION__, NewSlot);
-    
-    ints = save_and_disable_interrupts();
-    flash_range_erase(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, FLASH_SECTOR_SIZE);
-    flash_range_program(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, Buffer, sizeof(Buffer));
-    restore_interrupts(ints);
-}
-
-void flash_update_Slot(uint8_t index, uint8_t data[SLOTS_ST25TB_SECTORS_INTERNAL][4])
-{
-    uint32_t ints;
-    uint8_t Buffer[ROUND_UP(sizeof(FlashStoredData), FLASH_PAGE_SIZE)];
-    PFLASH_STORED_DATA p = (PFLASH_STORED_DATA) Buffer;
-    *p = FlashStoredData;
-
-    memcpy(p->Slots[index], data, sizeof(p->Slots[index]));
-    printf("|%s| - [%hhu] [UID: %016llx]\n", __FUNCTION__, index, *(uint64_t *) (data + SLOTS_ST25TB_INDEX_UID));
-
-    ints = save_and_disable_interrupts();
-    flash_range_erase(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, FLASH_SECTOR_SIZE);
-    flash_range_program(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, Buffer, sizeof(Buffer));
-    restore_interrupts(ints);
-}
-
 __attribute__ ((aligned (FLASH_SECTOR_SIZE), section(".flash_storage")))
 /*const */FLASH_STORED_DATA FlashStoredData = {
     .CurrentSlot = 0,
@@ -171,3 +139,35 @@ __attribute__ ((aligned (FLASH_SECTOR_SIZE), section(".flash_storage")))
     #endif
     }
 };
+
+void flash_update_CurrentSlot(uint32_t NewSlot)
+{
+    uint32_t ints;
+    uint8_t Buffer[ROUND_UP(sizeof(FlashStoredData), FLASH_PAGE_SIZE)];
+    PFLASH_STORED_DATA p = (PFLASH_STORED_DATA) Buffer;
+    *p = FlashStoredData;
+
+    p->CurrentSlot = NewSlot;
+    printf("|%s| - [%lu]\n", __FUNCTION__, NewSlot);
+    
+    ints = save_and_disable_interrupts();
+    flash_range_erase(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, FLASH_SECTOR_SIZE);
+    flash_range_program(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, Buffer, sizeof(Buffer));
+    restore_interrupts(ints);
+}
+
+void flash_update_Slot(uint8_t index, uint8_t data[SLOTS_ST25TB_SECTORS_INTERNAL][4])
+{
+    uint32_t ints;
+    uint8_t Buffer[ROUND_UP(sizeof(FlashStoredData), FLASH_PAGE_SIZE)];
+    PFLASH_STORED_DATA p = (PFLASH_STORED_DATA) Buffer;
+    *p = FlashStoredData;
+
+    memcpy(p->Slots[index], data, sizeof(p->Slots[index]));
+    printf("|%s| - [%hhu] [UID: %016llx]\n", __FUNCTION__, index, *(uint64_t *) (data + SLOTS_ST25TB_INDEX_UID));
+
+    ints = save_and_disable_interrupts();
+    flash_range_erase(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, FLASH_SECTOR_SIZE);
+    flash_range_program(host_safe_hw_ptr(&FlashStoredData) - XIP_BASE, Buffer, sizeof(Buffer));
+    restore_interrupts(ints);
+}

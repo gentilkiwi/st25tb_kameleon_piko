@@ -26,6 +26,8 @@ void MODE_learn()
                 SLOTS_Save(index);
                 LED_ON(LED_INDEX_STATUS_GREEN);
 
+                st25tb_utils_Display_dump(SLOTS_ST25TB_Current);
+
                 BP_IrqSource = IRQ_Wait_for_SW1_or_SW2();
                 bNeedToReload = false;
             }

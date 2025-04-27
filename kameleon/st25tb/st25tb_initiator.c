@@ -5,7 +5,6 @@
 */
 #include "st25tb_initiator.h"
 
-uint8_t ST25TB_Initiator_ValidateAndGetNBSectorsFromUID(const uint8_t *pui8UID);
 uint8_t ST25TB_Initiator_CMD_Initiate(uint8_t *pui8ChipId);
 uint8_t ST25TB_Initiator_CMD_Select(const uint8_t ui8ChipId);
 uint8_t ST25TB_Initiator_CMD_Get_Uid(uint8_t pui8Data[8]);
@@ -41,7 +40,7 @@ uint8_t ST25TB_Initiator_Initiate_Select_UID_C1_C2(uint8_t UID[8], uint8_t C1[4]
             BP_IrqSource = ST25TB_Initiator_CMD_CONFIRMED_Read_Block(ST25TB_IDX_COUNTER2, C2);
         }
 
-        ST25TB_Initiator_CMD_Completion();
+        //ST25TB_Initiator_CMD_Reset_To_Inventory();
     }
 
     return BP_IrqSource;
@@ -60,7 +59,7 @@ uint8_t ST25TB_Initiator_Read_Card()
             BP_IrqSource = ST25TB_Initiator_CMD_CONFIRMED_Get_Uid((uint8_t *) (SLOTS_ST25TB_Current + SLOTS_ST25TB_INDEX_UID));
             if(BP_IrqSource == IRQ_SOURCE_NONE)
             {
-                nbSectors = ST25TB_Initiator_ValidateAndGetNBSectorsFromUID((uint8_t *) SLOTS_ST25TB_Current[SLOTS_ST25TB_INDEX_UID]);
+                nbSectors = ST25TB_Initiator_ValidateAndGetNBSectorsFromUID((uint8_t *) SLOTS_ST25TB_Current[SLOTS_ST25TB_INDEX_UID], NULL);
                 if(nbSectors)
                 {
                     for(i = 0; (i < nbSectors) && (BP_IrqSource == IRQ_SOURCE_NONE); i++)
@@ -79,7 +78,8 @@ uint8_t ST25TB_Initiator_Read_Card()
                 }
             }
         }
-        ST25TB_Initiator_CMD_Completion();
+        
+        //ST25TB_Initiator_CMD_Reset_To_Inventory();
     }
 
     return BP_IrqSource;
@@ -98,12 +98,12 @@ uint8_t ST25TB_Initiator_Write_Card(uint8_t data[SLOTS_ST25TB_SECTORS_INTERNAL][
             BP_IrqSource = ST25TB_Initiator_CMD_Get_Uid(ui8UID);
             if(BP_IrqSource == IRQ_SOURCE_NONE)
             {
-                nbSectors = ST25TB_Initiator_ValidateAndGetNBSectorsFromUID(ui8UID);
+                nbSectors = ST25TB_Initiator_ValidateAndGetNBSectorsFromUID(ui8UID, NULL);
                 if (nbSectors && ((*(uint64_t*) ui8UID) == (*(uint64_t*) data[SLOTS_ST25TB_INDEX_UID]))) // implicit check of same size/techno :')
                 {
                     for(i = 0; (i < nbSectors) && (BP_IrqSource == IRQ_SOURCE_NONE); i++)
                     {
-#if defined(ST25TB_DO_NOT_WRITE_DANGEROUS_SECTOR)
+#if defined(ST25TB_DO_NOT_WRITE_DANGEROUS_SECTORS) || defined(ST25TB_DO_NOT_WRITE_COUNTERS)
                         if((i == ST25TB_IDX_COUNTER1) || (i == ST25TB_IDX_COUNTER2))
                         {
                             continue;
@@ -111,7 +111,7 @@ uint8_t ST25TB_Initiator_Write_Card(uint8_t data[SLOTS_ST25TB_SECTORS_INTERNAL][
 #endif
                         BP_IrqSource = ST25TB_Initiator_CMD_CONFIRMED_Write_Block(i, data[i]);
                     }
-#if !defined(ST25TB_DO_NOT_WRITE_DANGEROUS_SECTOR)
+#if !defined(ST25TB_DO_NOT_WRITE_DANGEROUS_SECTORS) && !defined(ST25TB_DO_NOT_WRITE_SYSTEM)
                     if(BP_IrqSource == IRQ_SOURCE_NONE)
                     {
                         BP_IrqSource = ST25TB_Initiator_CMD_CONFIRMED_Write_Block(ST25TB_IDX_SYSTEM, data[SLOTS_ST25TB_INDEX_SYSTEM]);
@@ -124,7 +124,8 @@ uint8_t ST25TB_Initiator_Write_Card(uint8_t data[SLOTS_ST25TB_SECTORS_INTERNAL][
                 }
             }
         }
-        ST25TB_Initiator_CMD_Completion();
+        
+        // ST25TB_Initiator_CMD_Reset_To_Inventory();
     }
 
     return BP_IrqSource;
@@ -155,7 +156,7 @@ uint8_t ST25TB_Initiator_SendRecv(const uint8_t *pui8Payload, const uint8_t ui8L
     return ret;
 }
 
-uint8_t ST25TB_Initiator_ValidateAndGetNBSectorsFromUID(const uint8_t *pui8UID)
+uint8_t ST25TB_Initiator_ValidateAndGetNBSectorsFromUID(const uint8_t *pui8UID, uint8_t *pui8ChipId)
 {
     uint8_t ret = 0, chipId;
 
@@ -191,6 +192,11 @@ uint8_t ST25TB_Initiator_ValidateAndGetNBSectorsFromUID(const uint8_t *pui8UID)
             {
                 ret = 128;
             }
+        }
+        
+        if(ret && pui8ChipId)
+        {
+            *pui8ChipId = chipId;
         }
     }
 
@@ -423,23 +429,6 @@ uint8_t ST25TB_Initiator_Initiate_Select_Read_Block(const uint8_t ui8BlockIdx, u
         if(BP_IrqSource == IRQ_SOURCE_NONE)
         {
             BP_IrqSource = ST25TB_Initiator_CMD_Read_Block(ui8BlockIdx, pui8Data);
-        }
-    }
-
-    return BP_IrqSource;
-}
-
-uint8_t ST25TB_Initiator_Initiate_Select_ultra_Write_Block(const uint8_t ui8BlockIdx, const uint8_t pui8Data[4])
-{
-    uint8_t BP_IrqSource, ui8ChipId;
-
-    BP_IrqSource = ST25TB_Initiator_CMD_Initiate(&ui8ChipId);
-    if(BP_IrqSource == IRQ_SOURCE_NONE)
-    {
-        BP_IrqSource = ST25TB_Initiator_CMD_Select(ui8ChipId);
-        if(BP_IrqSource == IRQ_SOURCE_NONE)
-        {
-            BP_IrqSource = ST25TB_Initiator_CMD_Write_Block_noflush_notimer(ui8BlockIdx, pui8Data);
         }
     }
 

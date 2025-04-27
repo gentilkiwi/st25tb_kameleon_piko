@@ -18,6 +18,7 @@ typedef enum __attribute__((__packed__)) _tSt25TbState {
 
 void ST25TB_Target_ResetState();
 tSt25TbState ST25TB_Target_StateMachine();
+uint8_t ST25TB_Target_AdjustIdxForSpecialAddr(uint8_t original);
 
 /*
  * SRT512

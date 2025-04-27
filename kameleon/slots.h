@@ -13,9 +13,9 @@
  * in all cases, you must add 4 bytes (SYSTEM) + 8 bytes (UID) for each slots
  * default is SLOTS_ST25TB_SUPPORT_4K
  */
-//#define SLOTS_ST25TB_SUPPORT_4K
+#define SLOTS_ST25TB_SUPPORT_4K
 //#define SLOTS_ST25TB_SUPPORT_2K
-#define SLOTS_ST25TB_SUPPORT_512
+//#define SLOTS_ST25TB_SUPPORT_512
 
 #if defined(SLOTS_ST25TB_SUPPORT_4K)
 #define SLOTS_ST25TB_SECTORS_INTERNAL   ((4096 / 8 / 4) + 3)

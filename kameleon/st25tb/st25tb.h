@@ -6,10 +6,13 @@
 #pragma once
 #include "../board.h"
 
-//#define ST25TB_DO_NOT_WRITE_DANGEROUS_SECTOR
+//#define ST25TB_DO_NOT_WRITE_DANGEROUS_SECTORS
+//#define ST25TB_DO_NOT_WRITE_COUNTERS
+#define ST25TB_DO_NOT_WRITE_SYSTEM // Not FR, ~ for BE
 
 #include "st25tb_target.h"
 #include "st25tb_initiator.h"
+#include "st25tb_utils.h"
 
 void ST25TB_TRF7970A_Mode(bool bIsInitiator);
 bool ST25TB_Recv(bool bIsinitiator, uint8_t irqProvided);
