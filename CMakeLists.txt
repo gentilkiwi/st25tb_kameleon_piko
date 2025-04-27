@@ -2,12 +2,9 @@ set(PROJECT st25tb_kameleon_piko)
 
 cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE Release)
-set(PICO_PLATFORM rp2040)
 set(PICO_BOARD pico)
-set(PICO_COMPILER pico_arm_gcc)
+set(PICO_PLATFORM rp2040)
+set(CMAKE_BUILD_TYPE Release)
 
 include(pico_sdk_import.cmake)
 if(${PICO_SDK_VERSION_MAJOR} LESS 2)
@@ -44,7 +41,6 @@ target_link_libraries(${PROJECT}
     pico_stdlib
     pico_unique_id
     hardware_spi
-    hardware_pio
     hardware_flash
 )
 

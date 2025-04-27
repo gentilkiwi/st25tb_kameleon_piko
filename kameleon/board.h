@@ -12,7 +12,6 @@
 #include "pico/stdlib.h"
 #include "pico/unique_id.h"
 #include "hardware/spi.h"
-#include "hardware/pio.h"
 #include "hardware/flash.h"
 #include "hardware/sync.h"
 #include "hardware/clocks.h"
