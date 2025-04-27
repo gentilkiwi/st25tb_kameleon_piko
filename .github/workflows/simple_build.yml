@@ -26,9 +26,9 @@ jobs:
     - name: Configure CMake for Picotool
       run: cmake -S ${{github.workspace}}/picotool_src -B ${{github.workspace}}/picotool_build -D PICO_SDK_PATH="${{ github.workspace }}/pico-sdk" -D PICOTOOL_NO_LIBUSB=1 -D CMAKE_INSTALL_PREFIX="${{ github.workspace }}/picotool"
     - name: Build Picotool
-      run: cmake --build ${{github.workspace}}/build_picotool --parallel $(nproc)
+      run: cmake --build ${{github.workspace}}/picotool_build --parallel $(nproc)
     - name: Install Picotool
-      run: cmake --install ${{github.workspace}}/build_picotool
+      run: cmake --install ${{github.workspace}}/picotool_build
 
     - name: Configure CMake for project
       run: cmake -S . -B ${{github.workspace}}/build -D PICO_SDK_PATH="${{ github.workspace }}/pico-sdk" -D picotool_DIR="${{ github.workspace }}/picotool"
