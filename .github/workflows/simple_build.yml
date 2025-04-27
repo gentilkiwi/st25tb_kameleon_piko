@@ -46,7 +46,7 @@ jobs:
     - name: Information about project
       run: |
         ls -al build/*.elf build/*.hex build/*.uf2
-        ls -alR ${{github.workspace}}/picotool
+        picotool/picotool info --all build/*.elf -t elf
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
