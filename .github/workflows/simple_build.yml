@@ -14,9 +14,30 @@ jobs:
         repository: raspberrypi/pico-sdk
         path: pico-sdk
         submodules: 'recursive'
+    - name: Checkout Picotool
+      uses: actions/checkout@v4
+      with:
+        repository: raspberrypi/picotool
+        path: picotool
     - name: Install dependencies
-      run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib libusb-1.0-0-dev
-    - name: Configure CMake
+      run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+
+    - name: Configure CMake for Picotool
+      run: cmake -S ${{github.workspace}}/picotool -B ${{github.workspace}}/build_picotool -D PICO_SDK_PATH="${{ github.workspace }}/pico-sdk" -D PICOTOOL_NO_LIBUSB=1
+    - name: Build Picotool
+      run: cmake --build ${{github.workspace}}/build_picotool --parallel $(nproc)
+    - name: Install Picotool
+      run: cmake --build ${{github.workspace}}/build_picotool --install
+
+    - name: Configure CMake for project
       run: cmake -S . -B ${{github.workspace}}/build -D PICO_SDK_PATH="${{ github.workspace }}/pico-sdk"
-    - name: Build
+    - name: Build project
       run: cmake --build ${{github.workspace}}/build --parallel $(nproc)
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        path: |
+          ${{github.workspace}}/build/*.elf
+          ${{github.workspace}}/build/*.hex
+          ${{github.workspace}}/build/*.uf2
