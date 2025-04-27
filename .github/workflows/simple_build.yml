@@ -19,6 +19,7 @@ jobs:
       with:
         repository: raspberrypi/picotool
         path: picotool
+
     - name: Install dependencies
       run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
 
@@ -27,7 +28,7 @@ jobs:
     - name: Build Picotool
       run: cmake --build ${{github.workspace}}/build_picotool --parallel $(nproc)
     - name: Install Picotool
-      run: cmake --build ${{github.workspace}}/build_picotool --install
+      run: cmake --install ${{github.workspace}}/build_picotool
 
     - name: Configure CMake for project
       run: cmake -S . -B ${{github.workspace}}/build -D PICO_SDK_PATH="${{ github.workspace }}/pico-sdk"
