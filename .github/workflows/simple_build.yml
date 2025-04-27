@@ -1,0 +1,22 @@
+name: Simple build
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+    - name: Checkout Pico SDK
+      uses: actions/checkout@v4
+      with:
+        repository: raspberrypi/pico-sdk
+        path: pico-sdk
+        submodules: 'recursive'
+    - name: Install dependencies
+      run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib libusb-1.0-0-dev
+    - name: Configure CMake
+      run: cmake -S . -B ${{github.workspace}}/build -D PICO_SDK_PATH="${{ github.workspace }}/pico-sdk"
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --parallel $(nproc)
