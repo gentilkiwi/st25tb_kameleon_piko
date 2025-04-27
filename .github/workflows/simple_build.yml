@@ -24,14 +24,20 @@ jobs:
       run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
 
     - name: Configure CMake for Picotool
-      run: cmake -S ${{github.workspace}}/picotool_src -B ${{github.workspace}}/picotool_build -D PICO_SDK_PATH=${{github.workspace}}/pico-sdk -D PICOTOOL_NO_LIBUSB=1 -D CMAKE_INSTALL_PREFIX=${{github.workspace}}/picotool
+      run: cmake -S ${{github.workspace}}/picotool_src -B ${{github.workspace}}/picotool_build \
+        -D PICO_SDK_PATH=${{github.workspace}}/pico-sdk \
+        -D PICOTOOL_NO_LIBUSB=1 \
+        -D PICOTOOL_FLAT_INSTALL=1 \
+        -D CMAKE_INSTALL_PREFIX=${{github.workspace}}/picotool
     - name: Build Picotool
       run: cmake --build ${{github.workspace}}/picotool_build --parallel $(nproc)
     - name: Install Picotool
       run: cmake --install ${{github.workspace}}/picotool_build
 
     - name: Configure CMake for project
-      run: cmake -S . -B build -D PICO_SDK_PATH=${{github.workspace}}/pico-sdk -D picotool_DIR=${{github.workspace}}/picotool/picotool
+      run: cmake -S . -B build \
+        -D PICO_SDK_PATH=${{github.workspace}}/pico-sdk \
+        -D picotool_DIR=${{github.workspace}}/picotool/picotool
     - name: Build project
       run: cmake --build build --parallel $(nproc)
 
@@ -41,6 +47,5 @@ jobs:
         name: ${{github.event.repository.name}}
         compression-level: 9
         path: |
-          build/*.elf
           build/*.hex
           build/*.uf2
