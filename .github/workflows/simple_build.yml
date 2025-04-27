@@ -24,7 +24,8 @@ jobs:
       run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
 
     - name: Configure CMake for Picotool
-      run: cmake -S ${{github.workspace}}/picotool_src -B ${{github.workspace}}/picotool_build \
+      run: |
+        cmake -S ${{github.workspace}}/picotool_src -B ${{github.workspace}}/picotool_build \
         -D PICO_SDK_PATH=${{github.workspace}}/pico-sdk \
         -D PICOTOOL_NO_LIBUSB=1 \
         -D PICOTOOL_FLAT_INSTALL=1 \
@@ -35,7 +36,8 @@ jobs:
       run: cmake --install ${{github.workspace}}/picotool_build
 
     - name: Configure CMake for project
-      run: cmake -S . -B build \
+      run: |
+        cmake -S . -B build \
         -D PICO_SDK_PATH=${{github.workspace}}/pico-sdk \
         -D picotool_DIR=${{github.workspace}}/picotool/picotool
     - name: Build project
