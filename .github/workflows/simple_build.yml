@@ -12,26 +12,26 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: raspberrypi/pico-sdk
-        path: ../pico-sdk
+        path: pico-sdk
         submodules: 'recursive'
     - name: Checkout Picotool
       uses: actions/checkout@v4
       with:
         repository: raspberrypi/picotool
-        path: ../picotool_src
+        path: picotool_src
 
     - name: Install dependencies
       run: sudo apt install cmake python3 build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
 
     - name: Configure CMake for Picotool
-      run: cmake -S ../picotool_src -B ../picotool_build -D PICO_SDK_PATH=../pico-sdk -D PICOTOOL_NO_LIBUSB=1 -D CMAKE_INSTALL_PREFIX=../picotool
+      run: cmake -S picotool_src -B picotool_build -D PICO_SDK_PATH=pico-sdk -D PICOTOOL_NO_LIBUSB=1 -D CMAKE_INSTALL_PREFIX=picotool
     - name: Build Picotool
-      run: cmake --build ../picotool_build --parallel $(nproc)
+      run: cmake --build picotool_build --parallel $(nproc)
     - name: Install Picotool
-      run: cmake --install ../picotool_build
+      run: cmake --install picotool_build
 
     - name: Configure CMake for project
-      run: cmake -S . -B build -D PICO_SDK_PATH=../pico-sdk -D picotool_DIR=../picotool/picotool
+      run: cmake -S . -B build -D PICO_SDK_PATH=pico-sdk -D picotool_DIR=picotool/picotool
     - name: Build project
       run: cmake --build build --parallel $(nproc)
 
