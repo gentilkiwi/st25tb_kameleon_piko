@@ -7,11 +7,16 @@
 
 void MODE_rewrite()
 {
-    uint8_t BP_IrqSource;
+    uint8_t BP_IrqSource = IRQ_SOURCE_SW2;
 
-    ST25TB_TRF7970A_Mode(true);
     do
     {
+        if(BP_IrqSource == IRQ_SOURCE_SW2) // to deal with first start and restart
+        {
+            ST25TB_TRF7970A_Mode(true);
+            LEDS_STATUS_Bitmask(0b000);
+        }
+        
         BP_IrqSource = IRQ_Wait_for_SW1_or_SW2_or_Timeout(ST25TB_INITIATOR_DELAY_BEFORE_RETRY);
         if(BP_IrqSource & IRQ_SOURCE_TIMER)
         {
@@ -21,6 +26,8 @@ void MODE_rewrite()
 
             if(BP_IrqSource == IRQ_SOURCE_NONE)
             {
+                TRF7970A_SPI_Write_SingleRegister(TRF79X0_CHIP_STATUS_CTRL_REG, 0x00); // if we let it run on battery :')
+                
                 LED_OFF(LED_INDEX_STATUS_RED);
                 LED_ON(LED_INDEX_STATUS_GREEN);
 
