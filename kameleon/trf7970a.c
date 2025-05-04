@@ -101,7 +101,6 @@ void __time_critical_func(TRF7970A_SPI_Write_Packet_TYPED)(const uint8_t *pcbDat
 
 uint8_t __time_critical_func(TRF7970A_SPI_waitIrq)()
 {
-    g_irq_TRF = TRF_IRQ_READ();
     while(!g_irq_TRF)
     {
         __low_power_mode_0();

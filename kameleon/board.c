@@ -111,16 +111,16 @@ uint8_t __time_critical_func(IRQ_Wait_for_SW1_or_SW2_or_TRF)(uint8_t *pTRF7970A_
 
     g_irq_SW1 = false;
     g_irq_SW2 = false;
-    g_irq_TRF = TRF_IRQ_READ();
+
     while(!g_irq_TRF && !g_irq_SW1 && !g_irq_SW2)
     {
-        __low_power_mode_0();
+        __low_power_mode_0(); //__no_operation(); -- in case of problems to catch some IRQ :( hopefully routine is only used in emulation
     }
 
     if(g_irq_TRF)
     {
-        *pTRF7970A_irqStatus = TRF7970A_getIrqStatus();
         g_irq_TRF = false;
+        *pTRF7970A_irqStatus = TRF7970A_getIrqStatus();
         ret |= IRQ_SOURCE_TRF7970A;
     }
 
@@ -144,7 +144,7 @@ uint8_t IRQ_Wait_for_SW1_or_TRF(uint8_t *pTRF7970A_irqStatus)
     uint8_t ret = IRQ_SOURCE_NONE;
 
     g_irq_SW1 = false;
-    g_irq_TRF = TRF_IRQ_READ();
+
     while(!g_irq_TRF && !g_irq_SW1)
     {
         __low_power_mode_0();
@@ -152,8 +152,8 @@ uint8_t IRQ_Wait_for_SW1_or_TRF(uint8_t *pTRF7970A_irqStatus)
 
     if(g_irq_TRF)
     {
-        *pTRF7970A_irqStatus = TRF7970A_getIrqStatus();
         g_irq_TRF = false;
+        *pTRF7970A_irqStatus = TRF7970A_getIrqStatus();
         ret |= IRQ_SOURCE_TRF7970A;
     }
 
@@ -174,6 +174,7 @@ uint8_t IRQ_Wait_for_SW1_or_SW2_or_Timeout(uint16_t timeout_ms)
     g_irq_SW1 = false;
     g_irq_SW2 = false;
     TIMER_start_Milliseconds(id, timeout_ms);
+
     while(!g_irq_TA0 && !g_irq_SW1 && !g_irq_SW2)
     {
         __low_power_mode_0();
@@ -208,7 +209,7 @@ uint8_t IRQ_Wait_for_SW1_or_SW2_or_TRF_or_Timeout(uint8_t *pTRF7970A_irqStatus, 
     g_irq_SW1 = false;
     g_irq_SW2 = false;
     TIMER_start_Milliseconds(id, timeout_ms);
-    g_irq_TRF = TRF_IRQ_READ();
+
     while(!g_irq_TRF && !g_irq_TA0 && !g_irq_SW1 && !g_irq_SW2)
     {
         __low_power_mode_0();

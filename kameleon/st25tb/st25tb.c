@@ -11,7 +11,7 @@ uint8_t g_ui8_cbST25TB_Buffer = 0;
 bool __time_critical_func(ST25TB_Recv)(bool bIsinitiator, uint8_t irqProvided)
 {
     bool status = false;
-    if (irqProvided & TRF79X0_IRQ_STATUS_SRX)
+    if (irqProvided == TRF79X0_IRQ_STATUS_SRX) // Previously '&', but we want to ignore errors
     {
         if (bIsinitiator || (TRF7970A_SPI_Read_SingleRegister(TRF79X0_NFC_TARGET_PROTOCOL_REG) == TRF79X0_NFC_TARGET_PROTOCOL_14B_COMMAND))
         {
@@ -65,7 +65,7 @@ const uint8_t ST25TB_TRF7970A_Mode_Target[] = {
     MK_WS(TRF79X0_REGULATOR_CONTROL_REG), TRF79X0_REGULATOR_CTRL_VRS_2_7V,
     MK_WS(TRF79X0_FIFO_IRQ_LEVEL), 0x0f,
     MK_WS(TRF79X0_NFC_LOW_DETECTION_LEVEL), 0x03,
-    MK_WS(TRF79X0_NFC_TARGET_LEVEL_REG), 0x07,
+    MK_WS(TRF79X0_NFC_TARGET_LEVEL_REG), 0x00, // 0x07 or 0x00 to ignore RF on/off IRQ
     MK_RS(TRF79X0_IRQ_STATUS_REG), 0x00,
 };
 
