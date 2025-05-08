@@ -5,28 +5,59 @@
 */
 #include "slots.h"
 
-void SLOTS_Change(uint8_t index)
+bool SLOTS_Change(uint8_t index)
 {
-    SLOTS_Load(index);
-    if(index != FlashStoredData.CurrentSlot)
-    {
-        flash_update_CurrentSlot(index);
-    }
-#if SLOTS_ST25TB_COUNT > 8
-    LEDS_SLOTS_Bitmask(index);
-#else
-    LED_Slot(index);
-#endif
- }
+    bool ret;
 
-void SLOTS_Load(uint8_t index)
-{
-    memcpy(SLOTS_ST25TB_Current, FlashStoredData.Slots[index], sizeof(FlashStoredData.Slots[index]));
+    ret = SLOTS_Load(index);
+    if(ret)
+    {
+        if(index != FlashStoredData.CurrentSlot)
+        {
+            flash_update_CurrentSlot(index);
+        }
+#if SLOTS_ST25TB_COUNT > 8
+        LEDS_SLOTS_Bitmask(index);
+#else
+        LED_Slot(index);
+#endif
+    }
+
+    return ret;
 }
 
-void SLOTS_Save(uint8_t index)
+bool SLOTS_Load(uint8_t index)
 {
-    flash_update_Slot(index, SLOTS_ST25TB_Current);
+    bool ret;
+
+    if(index < SLOTS_ST25TB_COUNT)
+    {
+        memcpy(SLOTS_ST25TB_Current, FlashStoredData.Slots[index], sizeof(FlashStoredData.Slots[index]));
+        ret = true;
+    }
+    else
+    {
+        ret = false;
+    }
+
+    return ret;
+}
+
+bool SLOTS_Save(uint8_t index)
+{
+    bool ret;
+
+    if(index < SLOTS_ST25TB_COUNT)
+    {
+        flash_update_Slot(index, SLOTS_ST25TB_Current);
+        ret = true;
+    }
+    else
+    {
+        ret = false;
+    }
+
+    return ret;
 }
 
 uint8_t SLOTS_FindByUID(uint8_t pui8Data[8]) // ret == SLOTS_FIND_INVALID_INDEX -> not found

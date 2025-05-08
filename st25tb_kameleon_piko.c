@@ -6,7 +6,7 @@
 #include "kameleon/board.h"
 #include "kameleon/modes.h"
 
-const KAMELEON_MODE Modes[] = {
+const KAKI_MODE Modes[] = {
     {.function = MODE_emulate, .ledsModesBitmask = 1 << 0, .Name = "Emulate"},
     {.function = MODE_rewrite, .ledsModesBitmask = 1 << 1, .Name = "Rewrite"},
     {.function = MODE_detect,  .ledsModesBitmask = 1 << 2, .Name = "Detect"},
@@ -14,7 +14,7 @@ const KAMELEON_MODE Modes[] = {
     {.function = MODE_unk,     .ledsModesBitmask = 1 << 4, .Name = "(⊙_⊙)？"},
 };
 
-const KAMELEON_MODE Modes_2[] = {
+const KAKI_MODE Modes_2[] = {
     {.function = MODE_learn,   .ledsModesBitmask = 1 << 3, .Name = "Learn"},
     {.function = MODE_tear,    .ledsModesBitmask = 1 << 4, .Name = "Tear!"},
 };
@@ -30,7 +30,7 @@ const char KIWI_BANNER[] = 	"\x1b[2J\x1b[3J\x1b[H\n"
 int main(void)
 {
     uint8_t maxModes;
-    const KAMELEON_MODE *pMode, *cMode;
+    const KAKI_MODE *pMode, *cMode;
     pico_unique_board_id_t board_id;
     
     stdio_init_all();

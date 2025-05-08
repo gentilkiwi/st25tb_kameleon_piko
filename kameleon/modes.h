@@ -7,11 +7,11 @@
 #include "board.h"
 
 typedef void (* PMODE_FUNCTION) ();
-typedef struct _KAMELEON_MODE {
+typedef struct _KAKI_MODE {
     const PMODE_FUNCTION function;
     const uint8_t ledsModesBitmask;
     const char* Name;
-} KAMELEON_MODE, *PKAMELEON_MODE;
+} KAKI_MODE, *PKAKI_MODE;
 
 #include "st25tb/st25tb.h"
 

@@ -156,7 +156,7 @@ void MODE_tear()
                 
                 if(bInRef)
                 {
-                    SLOTS_Load(FlashStoredData.CurrentSlot);
+                    SLOTS_Load_Current();
                 }
                 
                 BP_IrqSource = IRQ_Wait_for_SW1_or_SW2();

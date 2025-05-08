@@ -15,6 +15,7 @@
 #include "hardware/flash.h"
 #include "hardware/sync.h"
 #include "hardware/clocks.h"
+#include "hardware/watchdog.h"
 
 #include "slots.h"
 #include "references.h"
